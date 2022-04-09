@@ -1,0 +1,9 @@
+FROM rust:1.60.0 as builder
+WORKDIR /usr/src/true-patriot-bot
+COPY . .
+RUN cargo install --path .
+
+FROM debian:buster-slim
+RUN apt-get update && apt-get install -y openssl ca-certificates && apt-get clean
+COPY --from=builder /usr/local/cargo/bin/true-patriot-bot /usr/local/bin/true-patriot-bot
+CMD ["true-patriot-bot"]
